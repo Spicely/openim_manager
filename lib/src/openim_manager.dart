@@ -33,13 +33,12 @@ class OpenIMManager {
     if (taskData.rootIsolateToken != null) {
       BackgroundIsolateBinaryMessenger.ensureInitialized(taskData.rootIsolateToken!);
     }
-    IMManager iMManager = taskData.data.imManager;
     String? dataDir = taskData.data.dataDir;
     if (dataDir == null) {
       Directory document = await getApplicationDocumentsDirectory();
       dataDir = document.path;
     }
-    await iMManager.initSDK(
+    await OpenIM.iMManager.initSDK(
       platform: OpenIMManager.getIMPlatform(),
       apiAddr: taskData.data.apiAddr,
       wsAddr: taskData.data.wsAddr,
@@ -62,7 +61,7 @@ class OpenIMManager {
     _isInit = true;
     _task = await Utils.createIsolate(
       'openIM_isolate',
-      OpenIMManagerInit(apiAddr: apiAddr, wsAddr: wsAddr, dataDir: dataDir, imManager: OpenIM.iMManager),
+      OpenIMManagerInit(apiAddr: apiAddr, wsAddr: wsAddr, dataDir: dataDir),
       OpenIMManager._init,
     );
 
@@ -166,12 +165,9 @@ class OpenIMManagerInit {
   final String wsAddr;
   final String? dataDir;
 
-  final IMManager imManager;
-
   OpenIMManagerInit({
     required this.apiAddr,
     required this.wsAddr,
     this.dataDir,
-    required this.imManager,
   });
 }
